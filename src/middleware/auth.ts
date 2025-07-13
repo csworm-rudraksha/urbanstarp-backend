@@ -1,0 +1,1 @@
+export { protect as auth } from './authMiddleware'; 

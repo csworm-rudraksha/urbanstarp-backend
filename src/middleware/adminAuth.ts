@@ -1,0 +1,1 @@
+export { admin as adminAuth } from './authMiddleware'; 
