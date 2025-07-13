@@ -14,7 +14,15 @@ const generateToken = (id: string) => {
 // @access  Public
 export const register = async (req: Request, res: Response) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, phone } = req.body;
+
+    // Validate phone number (Indian format)
+    const phoneRegex = /^[6-9]\d{9}$/;
+    if (phone && !phoneRegex.test(phone)) {
+      return res.status(400).json({ 
+        message: 'Please enter a valid 10-digit Indian phone number' 
+      });
+    }
 
     const userExists = await User.findOne({ email });
 
@@ -26,6 +34,7 @@ export const register = async (req: Request, res: Response) => {
       name,
       email,
       password,
+      phone,
     });
 
     if (user) {
@@ -33,6 +42,7 @@ export const register = async (req: Request, res: Response) => {
         _id: user._id,
         name: user.name,
         email: user.email,
+        phone: user.phone,
         isAdmin: user.isAdmin,
         token: generateToken(user._id),
       });
@@ -58,6 +68,7 @@ export const login = async (req: Request, res: Response) => {
         _id: user._id,
         name: user.name,
         email: user.email,
+        phone: user.phone,
         isAdmin: user.isAdmin,
         token: generateToken(user._id),
       });
